@@ -1,11 +1,14 @@
 package com.example.medandco.medandco;
 
 import android.content.Intent;
+import android.net.http.HttpResponseCache;
+import android.net.http.HttpsConnection;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,8 +16,27 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import patient.AdapterPatient;
 import patient.Patient;
@@ -23,21 +45,23 @@ public class ListPatientActivity extends AppCompatActivity {
 
     ListView mListView;
     private AdapterPatient adapterPatient;
-    List<Patient> myListPatient  = new ArrayList<Patient>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_patient);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mListView = (ListView) findViewById(R.id.list_patient);
-        this.myListPatient = this.genererPatients();
 
-        adapterPatient = new AdapterPatient(ListPatientActivity.this, this.myListPatient);
+        startService(new Intent(getBaseContext(), ServerRequest.class));
+
+        mListView = (ListView) findViewById(R.id.list_patient);
+
+        adapterPatient = new AdapterPatient(ListPatientActivity.this, ServerRequest.myListPatient);
         mListView.setAdapter(adapterPatient);
+        Log.d("Données généré", ServerRequest.myListPatient.toString());
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -52,11 +76,15 @@ public class ListPatientActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Rechargement des données", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
+
+
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,17 +109,4 @@ public class ListPatientActivity extends AppCompatActivity {
     }
 
 
-    private List<Patient> genererPatients(){
-        List<Patient> tes = new ArrayList<Patient>();
-        tes.add(new Patient("Aurélien", "Chapin"));
-        tes.add(new Patient("Alexandre", "Wetzler"));
-        tes.add(new Patient("Anthony", "Kavanagh"));
-        tes.add(new Patient("Jiahui", "papapa"));
-        tes.add(new Patient("Emmanuelle", "Fouchere"));
-        tes.add(new Patient("Nicolas", "Hulot"));
-        tes.add(new Patient("Axel", "Gallot"));
-        tes.add(new Patient("Nicolas", "Dubois"));
-        tes.add(new Patient("Etienne ", "Wetzler"));
-        return tes;
-    }
 }
