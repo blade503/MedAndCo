@@ -13,6 +13,7 @@ import android.widget.Toast;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,6 +41,8 @@ public class DetailPatientActivity extends AppCompatActivity {
         TextView city = (TextView) findViewById(R.id.tvCity);
         TextView ssn = (TextView) findViewById(R.id.tvSSN);
         TextView phone = (TextView) findViewById(R.id.tvPhone);
+        TextView medecin = (TextView) findViewById(R.id.MedecinTraitant);
+
 
         String idPatient = (String) getIntent().getSerializableExtra("idPatient");
 
@@ -70,40 +73,16 @@ public class DetailPatientActivity extends AppCompatActivity {
 
             JSONObject contact = contactU.getJSONObject(0);
 
-            System.out.println(person.getString("_id"));
-            System.out.println(person.getString("nom"));
             name.setText(person.getString("nom"));
-
-            System.out.println(person.getString("prenom"));
             firstname.setText(person.getString("prenom"));
-
-            System.out.println(person.getString("image"));
-            System.out.println(person.getString("dateNaissance"));
             dateOfBirth.setText(person.getString("dateNaissance"));
-
-            System.out.println(person.getString("addresse"));
             address.setText(person.getString("addresse"));
-
-            System.out.println(person.getString("codePostal"));
             zipCode.setText(person.getString("codePostal"));
-
-            System.out.println(person.getString("ville"));
             city.setText(person.getString("ville"));
-
-            System.out.println(person.getString("telephone"));
             phone.setText(person.getString("telephone"));
-
-            System.out.println(person.getString("sexe"));
-            System.out.println(person.getString("numSecu"));
             ssn.setText(person.getString("numSecu"));
+            medecin.setText(person.getString("medecinTraitant"));
 
-            System.out.println(person.getString("contactUrgence"));
-            System.out.println(person.getString("villeNaissance"));
-            System.out.println(person.getString("paysNaissance"));
-            System.out.println(person.getString("medecinTraitant"));
-            System.out.println(person.getString("infosComplementaires"));
-
-            System.out.println(contact.getString("prenom"));
 
         } catch (Exception e) {
             e.printStackTrace();
