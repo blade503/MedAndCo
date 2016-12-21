@@ -1,12 +1,16 @@
 package com.example.medandco.medandco;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.net.SSLCertificateSocketFactory;
 import android.net.http.HttpResponseCache;
 import android.net.http.HttpsConnection;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -23,8 +27,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,21 +61,18 @@ public class ListPatientActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         startService(new Intent(getBaseContext(), ServerRequest.class));
 
         mListView = (ListView) findViewById(R.id.list_patient);
-
         adapterPatient = new AdapterPatient(ListPatientActivity.this, ServerRequest.myListPatient);
         mListView.setAdapter(adapterPatient);
-        Log.d("Données généré", ServerRequest.myListPatient.toString());
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Patient patient = (Patient)parent.getItemAtPosition(position);
-                Toast.makeText(getApplicationContext(), "patient :" + patient, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "patient :" + patient.getId(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -81,10 +85,7 @@ public class ListPatientActivity extends AppCompatActivity {
             }
         });
 
-
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

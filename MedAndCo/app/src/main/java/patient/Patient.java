@@ -10,19 +10,17 @@ public class Patient {
 
     String name;
     String surname;
-    String BirthDate;
-    String age;
-    String adresse;
-    String CodePostal;
-    String medecinTraitant;
-    ArrayList<String> allergies;
-    ArrayList<String> InfosComplemtaires;
+    String id;
 
-
-    public Patient(String name, String surname){
+    public Patient(String name, String surname, String id){
         this.name = name;
         this.surname = surname;
+        this.id = id;
     }
+
+    public String getId() { return id; }
+
+    public void setId(String id) {this.id = id; }
 
     public String getName() {
         return name;

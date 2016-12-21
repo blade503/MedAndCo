@@ -2,9 +2,15 @@ package com.example.medandco.medandco;
 
 import android.app.Service;
 import android.content.Intent;
+import android.net.SSLCertificateSocketFactory;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
+import android.os.StrictMode;
+
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.net.*;
 import java.io.*;
@@ -18,7 +24,7 @@ import patient.Patient;
 
 public class ServerRequest extends Service {
 
-    public static List<Patient> myListPatient  = genererPatients();
+    public static List<Patient> myListPatient = ServerRequest.getServerData();
 
     public ServerRequest() {
     }
@@ -42,24 +48,71 @@ public class ServerRequest extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    private static List<Patient> genererPatients(){
-        List<Patient> tes = new ArrayList<Patient>();
-        tes.add(new Patient("Aurélien", "Chapin"));
-        tes.add(new Patient("Alexandre", "Wetzler"));
-        tes.add(new Patient("Anthony", "Kavanagh"));
-        tes.add(new Patient("Jiahui", "papapa"));
-        tes.add(new Patient("Emmanuelle", "Fouchere"));
-        tes.add(new Patient("Nicolas", "Hulot"));
-        tes.add(new Patient("Axel", "Galliot"));
-        tes.add(new Patient("Nicolas", "Dubois"));
-        tes.add(new Patient("Etienne ", "Wetzler"));
-        tes.add(new Patient("Jiahui", "papapa"));
-        tes.add(new Patient("Emmanuelle", "Fouchere"));
-        tes.add(new Patient("Nicolas", "Hulot"));
-        tes.add(new Patient("Axel", "Galliot"));
-        tes.add(new Patient("Nicolas", "Dubois"));
-        tes.add(new Patient("Etienne ", "Wetzler"));
-        return tes;
+    public static ArrayList<Patient> getServerData(){
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        ArrayList<Patient> P = new ArrayList<Patient>();
+        try  {
+            String monUrl = "https://10.238.49.96:8080/api/findAll";
+
+            URL url;
+            HttpsURLConnection urlConnection = null;
+            try {
+                url = new URL(monUrl);
+
+                urlConnection = (HttpsURLConnection) url.openConnection();
+                HttpsURLConnection httpsConn = (HttpsURLConnection) urlConnection;
+                httpsConn.setSSLSocketFactory(SSLCertificateSocketFactory.getInsecure(0, null));
+                httpsConn.setHostnameVerifier(new AllowAllHostnameVerifier());
+
+                String jsonReply;
+                InputStream in = httpsConn.getInputStream();
+                jsonReply = convertStreamToString(in);
+
+                JSONObject obj = new JSONObject("{\"patients\":" + jsonReply + "}");
+                JSONArray geodata = obj.getJSONArray("patients");
+                int n = geodata.length();
+
+                for (int i = 0; i < n; ++i) {
+                    final JSONObject person = geodata.getJSONObject(i);
+                    P.add(new Patient(person.getString("nom"), person.getString("prenom"), person.getString("_id")));
+                }
+                return P;
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return P;
+    }
+
+    private static String convertStreamToString(InputStream is) {
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+                sb.append(line + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
     }
 
 
