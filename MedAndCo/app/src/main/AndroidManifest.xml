@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.medandco.medandco">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -10,7 +10,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".ListPatientActivity"
             android:label="@string/app_name"
@@ -25,7 +24,12 @@
         <service
             android:name=".ServerRequest"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity
+            android:name=".DetailPatientActivity"
+            android:label="@string/title_activity_detail_patient"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

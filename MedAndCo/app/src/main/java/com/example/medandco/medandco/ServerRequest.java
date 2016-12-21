@@ -4,16 +4,17 @@ import android.app.Service;
 import android.content.Intent;
 import android.net.SSLCertificateSocketFactory;
 import android.os.IBinder;
-import android.util.Log;
-import android.widget.Toast;
 import android.os.StrictMode;
+import android.widget.Toast;
 
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class ServerRequest extends Service {
                 url = new URL(monUrl);
 
                 urlConnection = (HttpsURLConnection) url.openConnection();
-                HttpsURLConnection httpsConn = (HttpsURLConnection) urlConnection;
+                HttpsURLConnection httpsConn = urlConnection;
                 httpsConn.setSSLSocketFactory(SSLCertificateSocketFactory.getInsecure(0, null));
                 httpsConn.setHostnameVerifier(new AllowAllHostnameVerifier());
 

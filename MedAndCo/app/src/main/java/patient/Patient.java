@@ -1,7 +1,5 @@
 package patient;
 
-import java.util.ArrayList;
-
 /**
  * Created by alexandre on 20/12/2016.
  */

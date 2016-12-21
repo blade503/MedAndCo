@@ -3,47 +3,18 @@ package com.example.medandco.medandco;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.net.SSLCertificateSocketFactory;
-import android.net.http.HttpResponseCache;
-import android.net.http.HttpsConnection;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import patient.AdapterPatient;
 import patient.Patient;
@@ -52,6 +23,7 @@ public class ListPatientActivity extends AppCompatActivity {
 
     ListView mListView;
     private AdapterPatient adapterPatient;
+    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +44,10 @@ public class ListPatientActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Patient patient = (Patient)parent.getItemAtPosition(position);
-                Toast.makeText(getApplicationContext(), "patient :" + patient.getId(), Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(getBaseContext(), DetailPatientActivity.class);
+                intent.putExtra("idPatient", patient.getId());
+                startActivity(intent);
             }
         });
 
@@ -82,6 +57,14 @@ public class ListPatientActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Rechargement des données", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                mBuilder.setSmallIcon(R.mipmap.ic_launcher);
+                mBuilder.setContentTitle("Notification Alert, Click Me!");
+                mBuilder.setContentText("Hi, This is Android Notification Detail!");
+                NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                // notificationID allows you to update the notification later on.
+                int notificationID = 12345;
+                mNotificationManager.notify(notificationID, mBuilder.build());
             }
         });
 
