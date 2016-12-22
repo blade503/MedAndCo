@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">MedAndCo</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_detail_patient">DetailPatientActivity</string>
+    <string name="title_activity_detail_patient">Informations d\'un Patient</string>
 </resources>

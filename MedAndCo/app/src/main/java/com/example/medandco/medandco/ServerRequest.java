@@ -54,7 +54,7 @@ public class ServerRequest extends Service {
         StrictMode.setThreadPolicy(policy);
         ArrayList<Patient> P = new ArrayList<Patient>();
         try  {
-            String monUrl = "https://10.238.49.96:8080/api/findAll";
+            String monUrl = "https://10.238.48.164:8080/api/findAll";
 
             URL url;
             HttpsURLConnection urlConnection = null;

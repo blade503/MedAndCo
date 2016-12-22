@@ -46,7 +46,7 @@ public class DetailPatientActivity extends AppCompatActivity {
 
         String idPatient = (String) getIntent().getSerializableExtra("idPatient");
 
-        String monUrl = "https://10.238.49.96:8080/api/findPatient?data=" + idPatient;
+        String monUrl = "https://10.238.48.164:8080/api/findPatient?data=" + idPatient;
 
         URL url;
         HttpURLConnection urlConnection = null;
