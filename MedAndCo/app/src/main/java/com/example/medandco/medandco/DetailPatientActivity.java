@@ -2,6 +2,7 @@ package com.example.medandco.medandco;
 
 import android.net.SSLCertificateSocketFactory;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,9 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class DetailPatientActivity extends AppCompatActivity {
 
+    String ip;
+    String token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,10 +47,14 @@ public class DetailPatientActivity extends AppCompatActivity {
         TextView phone = (TextView) findViewById(R.id.tvPhone);
         TextView medecin = (TextView) findViewById(R.id.MedecinTraitant);
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         String idPatient = (String) getIntent().getSerializableExtra("idPatient");
+        ip = (String) getIntent().getSerializableExtra("ip");
+        token = (String) getIntent().getSerializableExtra("token");
 
-        String monUrl = "https://10.238.48.164:8080/api/findPatient?data=" + idPatient;
+        String monUrl = "https://"+ ip +":8080/api/findPatient?data=" + idPatient;
 
         URL url;
         HttpURLConnection urlConnection = null;
@@ -118,4 +126,12 @@ public class DetailPatientActivity extends AppCompatActivity {
         return sb.toString();
     }
 
+    @Override
+    public void onBackPressed() {
+        ListPatientActivity.ServerPatientList async =
+                new ListPatientActivity.ServerPatientList(getBaseContext());
+        async.execute(token, ip);
+        finish();
+
+    }
 }

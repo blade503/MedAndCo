@@ -1,10 +1,12 @@
 package patient;
 
+import java.io.Serializable;
+
 /**
  * Created by alexandre on 20/12/2016.
  */
 
-public class Patient {
+public class Patient implements Serializable{
 
     String name;
     String surname;
